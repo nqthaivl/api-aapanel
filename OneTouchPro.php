@@ -361,6 +361,19 @@ class touchpro
         return json_decode($result, true); // Giải mã JSON thành mảng
     }
 
+    public function importDbase($file, $dbasename)
+    {
+        $completeUrl    = $this->url . '/database?action=InputSql';
+
+        $data               = $this->encrypt();
+
+        $data['file']       = $file;
+        $data['name']       = $dbasename;
+
+        $result         = $this->httpPostCookie($completeUrl, $data);
+
+        return json_decode($result, true);
+    }
     /**
      * Áp dụng chứng chỉ SSL cho một tên miền
      *
