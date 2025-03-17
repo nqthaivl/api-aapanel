@@ -26,3 +26,36 @@
    $api_key = "YOUR_API_KEY"; // Thay bằng API key của bạn
    $panel_url = "http://YOUR_PANEL_IP:PORT"; // Thay bằng URL aaPanel (ví dụ: http://103.186.101.197:8888)
    $api = new \onetouchpro\OneTouchPro($api_key, $panel_url);
+3. Tạo website
+   ```bash
+   $result = $api->addSite("example.com", "example.com", "My website");
+   $site_id = $result['siteId'] ?? null;
+   echo $result['siteStatus'] ? "Website created!" : $result['msg'];
+4. Thêm subdomain
+   ```bash
+   if ($site_id) {
+       $result = $api->addSubDomain($site_id, "example.com", "sub.example.com");
+       echo $result['status'] ? "Subdomain added!" : $result['msg'];
+   }
+5. Tạo database
+   ```bash
+   $result = $api->createDatabase("mydb", "myuser", "mypassword");
+   echo $result['status'] ? "Database created!" : $result['msg'];
+6. Tạo file .htaccess
+   ```bash
+   $htaccess = "RewriteEngine On\nRewriteRule ^test$ index.php [L]";
+   $result = $api->saveFile("/www/wwwroot/example.com/.htaccess", $htaccess);
+   echo $result['status'] ? "File saved!" : $result['msg'];
+7. Giải nén file zip
+   ```bash
+    $result = $api->unzip("/www/wwwroot/example.com/data.zip", "/www/wwwroot/example.com/extracted/");
+    echo "Giải nén: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+8. Xóa subdomain
+   ```bash
+   $result = $api->deleteSubDomain($site_id, "example.com", "sub.example.com");
+   echo "Xóa subdomain: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+9. Xóa website
+   ```bash
+   $result = $api->deleteSite($site_id, "example.com");
+   echo "Xóa website: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
