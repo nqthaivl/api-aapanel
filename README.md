@@ -1,4 +1,4 @@
-# OneTouchPro - aaPanel API Wrapper
+# OneTouchPro
 
 **OneTouchPro** là một thư viện PHP mạnh mẽ để tương tác với API của [aaPanel](https://www.aapanel.com/), giúp bạn tự động hóa việc quản lý server, website, file, database và hơn thế nữa chỉ với vài dòng code.
 
@@ -18,4 +18,11 @@
 ## Cài đặt
 1. Tải repository từ GitHub:
    ```bash
-   git clone https://github.com/username/onetouchpro.git
+   git clone https://github.com/nqthaivl/api-aapanel.git
+2. Khởi tạo
+Để bắt đầu, bạn cần require file OneTouchPro.php và khởi tạo đối tượng với API key và URL của aaPanel:
+   ```bash
+   require_once 'OneTouchPro.php';
+   $api_key = "YOUR_API_KEY"; // Thay bằng API key của bạn
+   $panel_url = "http://YOUR_PANEL_IP:PORT"; // Thay bằng URL aaPanel (ví dụ: http://103.186.101.197:8888)
+   $api = new \onetouchpro\OneTouchPro($api_key, $panel_url);
