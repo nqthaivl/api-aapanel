@@ -26,8 +26,8 @@
    use nguyenthai\touchpro\touchpro;
    
    $api = new touchpro();
-   $api->url = 'http://example.com';
-   $api->key = 'your_secret_key';
+   $api->url = 'http://example.com:port';
+   $api->key = 'api key';
    
    // Xóa file
    $result = $api->deleteFile('/path/to/file.txt');
