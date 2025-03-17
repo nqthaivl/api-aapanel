@@ -15,7 +15,7 @@ namespace onetouchpro;
  *
  * Lớp này cung cấp giao diện để tương tác với API aaPanel, cho phép quản lý hệ thống, website, file, database và hơn thế nữa.
  *
- * @author YourName
+ * @author NGUYENTHAI
  * @package onetouchpro/api
  */
 class OneTouchPro
