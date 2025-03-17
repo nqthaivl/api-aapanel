@@ -15,7 +15,7 @@ namespace onetouchpro;
  *
  * Lớp này cung cấp giao diện để tương tác với API aaPanel, cho phép quản lý hệ thống, website, file, database và hơn thế nữa.
  *
- * @author NGUYENTHAI
+ * @author NguyenThai
  * @package onetouchpro/api
  */
 class OneTouchPro
@@ -109,11 +109,8 @@ class OneTouchPro
      */
     public function getSystemTotal()
     {
-        // Định nghĩa URL endpoint
         $completeUrl = $this->url . '/system?action=GetSystemTotal';
-        // Tạo dữ liệu với chữ ký
         $data = $this->encrypt();
-        // Gửi yêu cầu và trả về kết quả dưới dạng JSON
         $result = $this->httpPostCookie($completeUrl, $data);
         return json_decode($result, true);
     }
@@ -500,6 +497,41 @@ class OneTouchPro
     }
 
     /**
+     * Xóa file trên server
+     * 
+     * @param string $path Đường dẫn file cần xóa
+     * @return array Kết quả xóa file
+     */
+    public function deleteFile($path)
+    {
+        $completeUrl = $this->url . '/files?action=DeleteFile';
+        $data = $this->encrypt();
+        $data['path'] = $path;
+        $result = $this->httpPostCookie($completeUrl, $data);
+        return json_decode($result, true);
+    }
+
+    /**
+     * Xóa thư mục trên server
+     * 
+     * @param string $path Đường dẫn thư mục cần xóa
+     * @return array Kết quả xóa thư mục
+     */
+    public function deleteDir($path)
+    {
+        // Định nghĩa URL endpoint để xóa thư mục
+        $completeUrl = $this->url . '/files?action=DeleteDir';
+        // Tạo dữ liệu với chữ ký bảo mật
+        $data = $this->encrypt();
+        // Thêm đường dẫn thư mục cần xóa vào dữ liệu
+        $data['path'] = $path;
+        // Gửi yêu cầu đến aaPanel và lấy kết quả
+        $result = $this->httpPostCookie($completeUrl, $data);
+        // Chuyển đổi kết quả từ chuỗi JSON sang mảng PHP
+        return json_decode($result, true);
+    }
+
+    /**
      * Giải nén file ZIP
      * 
      * @param string $sourceFile Đường dẫn file ZIP
@@ -757,5 +789,85 @@ class OneTouchPro
         $result = $this->httpPostCookie($completeUrl, $data);
         return json_decode($result, true);
     }
+
+    /**
+     * Xóa database
+     * 
+     * @param int $dbId ID của database (lấy từ danh sách database)
+     * @param string $name Tên database
+     * @return array Kết quả xóa database
+     */
+    public function deleteDatabase($dbId, $name)
+    {
+        // Định nghĩa URL endpoint để xóa database
+        $completeUrl = $this->url . '/database?action=DeleteDatabase';
+        // Tạo dữ liệu với chữ ký bảo mật
+        $data = $this->encrypt();
+        // Thêm ID của database cần xóa
+        $data['id'] = $dbId;
+        // Thêm tên database cần xóa
+        $data['name'] = $name;
+        // Gửi yêu cầu đến aaPanel và lấy kết quả
+        $result = $this->httpPostCookie($completeUrl, $data);
+        // Chuyển đổi kết quả từ chuỗi JSON sang mảng PHP
+        return json_decode($result, true);
+    }
+}
+
+// Ví dụ sử dụng
+$api_key = "YOUR_API_KEY"; // Thay bằng API key thực tế
+$panel_url = "http://YOUR_PANEL_IP:PORT"; // Thay bằng IP/port thực tế
+
+$api = new \onetouchpro\OneTouchPro($api_key, $panel_url);
+
+// 1. Lấy thông tin hệ thống
+$result = $api->getSystemTotal();
+echo "Thông tin hệ thống: " . ($result ? json_encode($result) : "Lỗi") . "\n";
+
+// 2. Tạo website
+$result = $api->addSite("example.com", "example.com", "My website");
+$site_id = $result['siteId'] ?? null;
+echo "Tạo website: " . ($result['siteStatus'] ? "Thành công" : $result['msg']) . "\n";
+
+// 3. Thêm subdomain và các tác vụ khác
+if ($site_id) {
+    $result = $api->addSubDomain($site_id, "example.com", "sub.example.com");
+    echo "Thêm subdomain: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 4. Tạo database
+    $result = $api->createDatabase("example_db", "example_user", "example_pass123");
+    $db_id = $result['id'] ?? null; // Lấy ID của database vừa tạo
+    echo "Tạo database: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 5. Tạo file .htaccess
+    $htaccess = "RewriteEngine On\nRewriteRule ^test$ index.php [L]";
+    $result = $api->saveFile("/www/wwwroot/example.com/.htaccess", $htaccess);
+    echo "Tạo file: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 6. Giải nén file ZIP
+    $result = $api->unzip("/www/wwwroot/example.com/data.zip", "/www/wwwroot/example.com/extracted/");
+    echo "Giải nén: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 7. Xóa file
+    $result = $api->deleteFile("/www/wwwroot/example.com/.htaccess");
+    echo "Xóa file: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 8. Xóa thư mục
+    $result = $api->deleteDir("/www/wwwroot/example.com/extracted");
+    echo "Xóa thư mục: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 9. Xóa subdomain
+    $result = $api->deleteSubDomain($site_id, "example.com", "sub.example.com");
+    echo "Xóa subdomain: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+
+    // 10. Xóa database
+    if ($db_id) {
+        $result = $api->deleteDatabase($db_id, "example_db");
+        echo "Xóa database: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+    }
+
+    // 11. Xóa website
+    $result = $api->deleteSite($site_id, "example.com");
+    echo "Xóa website: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
 }
 ?>
