@@ -39,4 +39,5 @@ if ($site_id) {
     // 8. Xóa website
     $result = $api->deleteSite($site_id, "example.com");
     echo "Xóa website: " . ($result['status'] ? "Thành công" : $result['msg']) . "\n";
+}
 ?>
