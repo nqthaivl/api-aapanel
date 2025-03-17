@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Application Name: API AAPANEL 
+ * Description: Đoạn php kết nối với aapanel, giúp cho quá trình tương tác với aapanel đơn giản và thuận tiện
+ * Version: 1.0
+ * Author: Nguyễn Thái - 1Touch.Pro - chonanh.com
+ * Date: March 03, 2025
+ * License: MIT
+ * Dependencies: PHP 7.4+, AAPANEL API Client
+ */
 namespace onetouchpro;
 
 /**
@@ -749,6 +757,5 @@ class OneTouchPro
         $result = $this->httpPostCookie($completeUrl, $data);
         return json_decode($result, true);
     }
-}
 }
 ?>
